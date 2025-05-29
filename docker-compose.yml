@@ -1,0 +1,32 @@
+
+services:
+  dashy:
+    container_name: Dashy
+    image: lissy93/dashy:3.0.0
+    volumes:
+      - ./config.yml:/app/user-data/conf.yml
+      - ./item-icons/:/app/user-data/item-icons/
+    ports:
+      - 8085:8080
+    environment:
+      - NODE_ENV=production
+      - UID=1000
+      - GID=1000
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', '/app/services/healthcheck']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  weatherboy:
+    build:
+      context: ./Weatherboy
+    container_name: weatherboy
+    env_file:
+      - ./Weatherboy/.env
+    ports:
+      - 5177:5177
+    restart: unless-stopped
+
