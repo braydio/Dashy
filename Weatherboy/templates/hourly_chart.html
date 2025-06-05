@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: monospace;
+      background: transparent;
+      color: #eee;
+      margin: 0;
+      padding: 0.5rem;
+    }
+
+    .forecast-row {
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .day-card {
+      width: 180px;
+      background: rgba(26, 26, 26, 0.82);
+      border-radius: 0.7rem;
+      padding: 0.6rem;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 2rem;
+    }
+
+    .temps {
+      margin: 0.2rem 0;
+      font-weight: bold;
+      color: #acd4fb;
+    }
+
+    .date {
+      font-size: 0.93rem;
+      color: #8ea7b6;
+    }
+
+    .svg-chart {
+      width: 150px;
+      height: 60px;
+      display: block;
+      margin: 0.5rem auto 0;
+    }
+
+    .axis-label {
+      font-size: 0.62rem;
+      fill: #abc;
+    }
+
+    .dot {
+      fill: #acd4fb;
+    }
+
+    .line {
+      stroke: #81c1ea;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .temp-label {
+      font-size: 0.65rem;
+      fill: #fff;
+    }
+
+    .switcher {
+      margin-bottom: 1rem;
+    }
+
+    .hour-label {
+      font-size: 0.62rem;
+      fill: #abc;
+    }
+  </style>
+</head>
+
+<body>
+  <form method="get" class="switcher">
+    <label>
+      View:&nbsp;
+      <select name="tmpl" onchange="this.form.submit()">
+        <option value="main" {% if request.args.get('tmpl', 'main' )=='main' %}selected{% endif %}>Minimal</option>
+        <option value="hourly_chart" {% if request.args.get('tmpl')=='hourly_chart' %}selected{% endif %}>Hourly Chart
+        </option>
+      </select>
+    </label>
+  </form>
+  <div class="forecast-row">
+    {% for day in forecast %}
+    <div class="day-card" title="{{ day['summary'] }}">
+      <div class="icon">{{ day['icon'] }}</div>
+      <div class="date">{{ day['weekday'] }}<br>{{ day['date'][5:] }}</div>
+      <svg class="svg-chart" viewBox="0 0 150 60">
+        {% set entries = day.raw_entries %}
+        {% set temps = entries | map(attribute='main.temp') | list %}
+        {% set times = entries | map(attribute='dt_txt') | list %}
+        {% set n = temps|length %}
+        {% if n > 1 %}
+        {% set t_min = temps|min %}
+        {% set t_max = temps|max %}
+        {% for i in range(n-1) %}
+        {% set x1 = (i/(n-1)) * 130 + 10 %}
+        {% set y1 = 44 - ((temps[i]-t_min)/(t_max-t_min+0.01))*34 %}
+        {% set x2 = ((i+1)/(n-1)) * 130 + 10 %}
+        {% set y2 = 44 - ((temps[i+1]-t_min)/(t_max-t_min+0.01))*34 %}
+        <line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}" class="line" />
+        {% endfor %}
+        {% for i in range(n) %}
+        {% set x = (i/(n-1)) * 130 + 10 %}
+        {% set y = 44 - ((temps[i]-t_min)/(t_max-t_min+0.01))*34 %}
+        <circle cx="{{x}}" cy="{{y}}" r="2.5" class="dot" />
+        <text x="{{x}}" y="{{y-6}}" class="temp-label" text-anchor="middle">{{ temps[i]|round }}</text>
+        <text x="{{x}}" y="59" class="hour-label" text-anchor="middle">
+          {{ times[i][11:13]|int }}h
+        </text>
+        {% endfor %}
+        <text x="10" y="52" class="axis-label" text-anchor="start">{{ t_min|round }}°</text>
+        <text x="140" y="52" class="axis-label" text-anchor="end">{{ t_max|round }}°</text>
+        {% endif %}
+      </svg>
+      <div class="temps">{{ day['temp_min'] }}° / {{ day['temp_max'] }}°</div>
+    </div>
+    {% endfor %}
+  </div>
+</body>
+
+</html>
