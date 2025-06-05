@@ -2,7 +2,7 @@
 services:
   dashy:
     container_name: Dashy
-    image: lissy93/dashy:3.0.0
+    image: lissy93/dashy
     volumes:
       - ./config.yml:/app/user-data/conf.yml
       - ./item-icons/:/app/user-data/item-icons/
@@ -24,6 +24,9 @@ services:
     build:
       context: ./Weatherboy
     container_name: weatherboy
+    volumes:
+      - ./Weatherboy/templates/:/app/templates/
+      - ./Weatherboy/weatherdata/:/app/weatherdata/
     env_file:
       - ./Weatherboy/.env
     ports:
