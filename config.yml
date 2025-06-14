@@ -18,13 +18,17 @@ sections:
     icon: "fas fa-server"
     items:
       - title: "Jellyfin"
-        url: "http://192.168.1.85:8096"
+        url: "http://192.168.1.238:8096"
         statusCheck: true
         icon: "si-jellyfin"
+      - title: "Threadfin"
+        url: "http://192.168.1.238:34400/web"
+        icon: "fa-stream"
+        statusCheck: true
       - title: "JellyFindarr"
         url: "http://192.168.1.78:5505"
         statusCheck: true
-        icon: "si-joplin"
+        icon: "mdi-antenna"
       - title: "qBittorrent"
         url: "http://192.168.1.85:8080"
         statusCheck: true
