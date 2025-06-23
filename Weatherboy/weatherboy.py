@@ -26,8 +26,9 @@ def get_icon(desc):
     return "🌤️"
 
 
-def cache_path(date):
-    return os.path.join(DATA_DIR, f"{date}.json")
+def cache_path(date, kind="forecast"):
+    suffix = "_now.json" if kind == "now" else ".json"
+    return os.path.join(DATA_DIR, f"{date}{suffix}")
 
 
 def is_cache_fresh(path, max_age_hours=1):
@@ -79,11 +80,36 @@ def fetch_and_save_forecast():
             json.dump(out, f)
 
 
+def fetch_and_cache_current_weather():
+    url = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&units=imperial&appid={API_KEY}"
+    r = requests.get(url, timeout=10).json()
+    sunrise = datetime.fromtimestamp(r["sys"]["sunrise"]).isoformat()
+    sunset = datetime.fromtimestamp(r["sys"]["sunset"]).isoformat()
+    now_data = {
+        "sunrise": sunrise,
+        "sunset": sunset,
+        "retrieved_at": datetime.now().isoformat(),
+    }
+    today = datetime.now().date().isoformat()
+    with open(cache_path(today, kind="now"), "w") as f:
+        json.dump(now_data, f)
+
+
 def load_forecast(days=5):
     today = datetime.now().date().isoformat()
-    today_cache = cache_path(today)
-    if not is_cache_fresh(today_cache):
+    today_forecast_path = cache_path(today)
+    today_now_path = cache_path(today, kind="now")
+
+    if not is_cache_fresh(today_forecast_path):
         fetch_and_save_forecast()
+    if not is_cache_fresh(today_now_path):
+        fetch_and_cache_current_weather()
+
+    with open(today_now_path) as f:
+        sun = json.load(f)
+    sunrise_dt = datetime.fromisoformat(sun["sunrise"])
+    sunset_dt = datetime.fromisoformat(sun["sunset"])
+
     forecast = []
     for offset in range(days):
         date = (datetime.now().date() + timedelta(days=offset)).isoformat()
@@ -91,6 +117,15 @@ def load_forecast(days=5):
         if os.path.exists(path):
             with open(path) as f:
                 data = json.load(f)
+
+            if offset == 0:
+                data["sunrise"] = sun["sunrise"]
+                data["sunset"] = sun["sunset"]
+                data["daylight_bounds"] = {
+                    "sunrise_hour": sunrise_dt.hour,
+                    "sunset_hour": sunset_dt.hour,
+                }
+
             forecast.append(
                 {
                     "date": data["date"],
@@ -100,6 +135,9 @@ def load_forecast(days=5):
                     "icon": data["icon"],
                     "summary": data["summary"],
                     "raw_entries": data.get("raw_entries", []),
+                    "sunrise": data.get("sunrise"),
+                    "sunset": data.get("sunset"),
+                    "daylight_bounds": data.get("daylight_bounds"),
                 }
             )
     return forecast
@@ -114,12 +152,31 @@ def add_header(response):
     return response
 
 
+@app.template_filter("datetimeformat")
+def datetimeformat(value, format="%I%p"):
+    try:
+        return (
+            datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+            .strftime(format)
+            .lstrip("0")
+            .lower()
+        )
+    except Exception:
+        return value
+
+
 @app.route("/")
 def index():
-    forecast = load_forecast()
     tmpl = request.args.get("tmpl", "main")
-    # main.html, hourly_chart.html, etc.
-    return render_template(f"{tmpl}.html", forecast=forecast)
+    selected_day = int(request.args.get("day", 0))
+
+    forecast = load_forecast()
+    if selected_day < 0 or selected_day >= len(forecast):
+        selected_day = 0
+
+    return render_template(
+        f"{tmpl}.html", forecast=forecast, now=datetime.now(), selected_day=selected_day
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: monospace;
+      background: transparent;
+      color: #eee;
+      margin: 0;
+      padding: 0.5rem;
+    }
+
+    .forecast-row {
+      display: flex;
+      justify-content: center;
+      padding-top: 1rem;
+    }
+
+    .day-card {
+      width: 320px;
+      background: rgba(26, 26, 26, 0.82);
+      border-radius: 0.7rem;
+      padding: 0.8rem;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .temps {
+      margin: 0.6rem 0 0.2rem;
+      font-weight: bold;
+      color: #acd4fb;
+    }
+
+    .date {
+      font-size: 0.93rem;
+      color: #8ea7b6;
+      margin-bottom: 0.2rem;
+    }
+
+    .svg-chart {
+      width: 280px;
+      height: 80px;
+      display: block;
+      margin: 0.5rem auto;
+    }
+
+    .dot {
+      fill: #acd4fb;
+    }
+
+    .line {
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .line-past {
+      stroke: #81c1ea;
+    }
+
+    .line-future {
+      stroke: #404c5a;
+    }
+
+    .temp-label {
+      font-size: 0.65rem;
+      fill: #fff;
+    }
+
+    .hour-label {
+      font-size: 0.62rem;
+      fill: #abc;
+    }
+
+    .bg-night {
+      fill: rgba(255, 255, 255, 0.03);
+    }
+
+    .bg-day {
+      fill: rgba(255, 255, 255, 0.06);
+    }
+
+    .sun-times {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      color: #f7cf8f;
+    }
+
+    .sun-times i {
+      font-size: 1rem;
+      vertical-align: middle;
+    }
+
+    .dropdown {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    select {
+      background-color: #1a1a1a;
+      color: #eee;
+      border: 1px solid #444;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.4rem;
+      font-size: 0.9rem;
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="dropdown">
+    <form method="get">
+      <select name="day" onchange="this.form.submit()">
+        {% for d in forecast %}
+        {% set i = loop.index0 %}
+        <option value="{{ i }}" {% if i==selected_day %}selected{% endif %}>{{ d.weekday }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+
+  <div class="forecast-row">
+    {% set day = forecast[selected_day] %}
+    {% set sunrise_hour = day.daylight_bounds.sunrise_hour if day.daylight_bounds else 6 %}
+    {% set sunset_hour = day.daylight_bounds.sunset_hour if day.daylight_bounds else 18 %}
+    <div class="day-card" title="{{ day['summary'] }}">
+      <div class="icon" title="{{ day['summary'] }}">
+        <i class="mdi mdi-weather-partly-cloudy"></i>
+      </div>
+      <div class="date">{{ day.weekday }} – {{ day['date'][5:] }}</div>
+
+      <svg class="svg-chart" viewBox="0 0 280 80">
+        {% set entries = day.raw_entries %}
+        {% set temps = entries | map(attribute='main.temp') | list %}
+        {% set times = entries | map(attribute='dt_txt') | list %}
+        {% set now_hour = now.hour %}
+        {% set hours = times | map('string') | map('slice', 11, 13) | map('int') | list %}
+        {% set descriptions = entries | map(attribute='weather') | map('first') | map(attribute='description') | list %}
+        {% set n = temps|length %}
+        {% if n > 1 %}
+        {% set t_min = temps|min %}
+        {% set t_max = temps|max %}
+
+        {% for i in range(n-1) %}
+        {% set h = hours[i] %}
+        {% set x = (i/(n-1)) * 260 + 10 %}
+        {% set width = 260 / (n-1) %}
+        {% if h < sunrise_hour or h>= sunset_hour %}
+          <rect x="{{x}}" y="0" width="{{width}}" height="80" class="bg-night" />
+          {% else %}
+          <rect x="{{x}}" y="0" width="{{width}}" height="80" class="bg-day" />
+          {% endif %}
+          {% endfor %}
+
+          {% for i in range(n-1) %}
+          {% set x1 = (i/(n-1)) * 260 + 10 %}
+          {% set y1 = 50 - ((temps[i]-t_min)/(t_max-t_min+0.01))*36 %}
+          {% set x2 = ((i+1)/(n-1)) * 260 + 10 %}
+          {% set y2 = 50 - ((temps[i+1]-t_min)/(t_max-t_min+0.01))*36 %}
+          {% set hour = hours[i] %}
+          {% set cls = 'line-past' if hour
+          <= now_hour else 'line-future' %} <line x1="{{x1}}" y1="{{y1}}" x2="{{x2}}" y2="{{y2}}"
+            class="line {{ cls }}" />
+          {% endfor %}
+
+          {% for i in range(n) %}
+          {% if i % 2 == 0 %} {# plot every 2 hours #}
+          {% set x = (i/(n-1)) * 260 + 10 %}
+          {% set y = 50 - ((temps[i]-t_min)/(t_max-t_min+0.01))*36 %}
+          <circle cx="{{x}}" cy="{{y}}" r="2.5" class="dot">
+            <title>{{ descriptions[i]|capitalize }} – {{ temps[i]|round }}°</title>
+          </circle>
+          <text x="{{x}}" y="{{y-6}}" class="temp-label" text-anchor="middle">{{ temps[i]|round }}</text>
+          <text x="{{x}}" y="76" class="hour-label" text-anchor="middle">
+            {{ times[i]|datetimeformat("%-I%p") }}
+          </text>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+      </svg>
+
+      <div class="temps">{{ day['temp_min']|round }}° / {{ day['temp_max']|round }}°</div>
+      {% if day.sunrise and day.sunset %}
+      <div class="sun-times">
+        <i class="mdi mdi-weather-sunset-up"></i> {{ day.sunrise[11:16] }} &nbsp;
+        <i class="mdi mdi-weather-sunset-down"></i> {{ day.sunset[11:16] }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+
+</html>

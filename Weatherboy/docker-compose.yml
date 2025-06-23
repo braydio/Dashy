@@ -1,0 +1,15 @@
+
+services:
+  weatherboy:
+    build:
+      context: .
+    container_name: weatherboy
+    volumes:
+      - ./templates/:/app/templates/
+      - ./weather_data/:/app/weather_data/
+    env_file:
+      - ./.env
+    ports:
+      - 5170:5170
+    restart: unless-stopped
+

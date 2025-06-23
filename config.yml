@@ -1,135 +1,79 @@
 appConfig:
-  title: "Startpage"
-  description: "Starter Dash - Lobotomized from Glance Dash"
-  theme: "auto"
-  icon: "fas fa-home"
-
+  title: Startpage
+  description: Starter Dash - Lobotomized from Glance Dash
+  theme: default
+  icon: fas fa-home
 sections:
-  - name: "Weatherboy Forecast"
-    icon: "fas fa-cloud-sun"
+  - name: Weatherboy Forecast
+    icon: fas fa-cloud-sun
     widgets:
       - type: iframe
         options:
-          url: "http://192.168.1.238:5177/?tmpl=main_fit"  # for minimal
-          height: 130
+          url: http://192.168.1.238:5170/
+          height: 300
           showTitle: true
-
-  - name: "Service Status"
-    icon: "fas fa-server"
+  - name: Service Status
+    icon: fas fa-server
     items:
-      - title: "Jellyfin"
-        url: "http://192.168.1.238:8096"
+      - title: Jellyfin
+        url: http://192.168.1.238:8096
         statusCheck: true
-        icon: "si-jellyfin"
-      - title: "Threadfin"
-        url: "http://192.168.1.238:34400/web"
-        icon: "fa-stream"
+        icon: si-jellyfin
+      - title: Threadfin
+        url: http://192.168.1.238:34400/web
+        icon: fa-stream
         statusCheck: true
-      - title: "JellyFindarr"
-        url: "http://192.168.1.78:5505"
+      - title: JellyFindarr
+        url: http://192.168.1.78:5505
         statusCheck: true
-        icon: "mdi-antenna"
-      - title: "qBittorrent"
-        url: "http://192.168.1.85:8080"
+        icon: mdi-antenna
+      - title: qBittorrent
+        url: http://192.168.1.85:8050
         statusCheck: true
-        icon: "si-qbittorrent"
-      - title: "Radarr"
-        url: "http://192.168.1.85:7878"
+        icon: si-qbittorrent
+      - title: Radarr
+        url: http://192.168.1.85:7878
         statusCheck: true
-        icon: "si-radarr"
-      - title: "Sonarr"
-        url: "http://192.168.1.85:8989"
+        icon: si-radarr
+      - title: Sonarr
+        url: http://192.168.1.85:8989
         statusCheck: true
-        icon: "si-radarr"
-      - title: "Lidarr"
-        url: "http://192.168.1.85:8686"
+        icon: si-radarr
+      - title: Lidarr
+        url: http://192.168.1.85:8686
         statusCheck: true
-        icon: "si-lidarr"
-
-  - name: "Quick Search"
-    icon: "fas fa-search"
-    widgets:
-      - type: "search-bar"
-        options:
-          autoFocus: true
-        title: "Search"
-
-  - name: "Bookmarks"
-    icon: "fas fa-bookmark"
+        icon: si-lidarr
+  - name: Bookmarks
+    icon: fas fa-bookmark
     items:
-      - title: "Arch Linux Launchpad"
-        url: "http://192.168.1.227:9090"
-        icon: "fas fa-rocket"
-      - title: "Arch Desk Launchpad"
-        url: "http://192.168.1.239:9090"
-        icon: "fas fa-desktop"
-      - title: "Raspberry4 Launchpad"
-        url: "http://192.168.1.85:9090"
-        icon: "fas fa-microchip"
-      - title: "pyNance Dashroad"
-        url: "http://192.168.1.239:3353"
-        icon: "fas fa-chart-line"
-      - title: "CapitalOne"
-        url: "https://capitalone.com"
-        icon: "fas fa-university"
-      - title: "Fidelity"
-        url: "https://fidelity.com/"
-        icon: "fas fa-dollar-sign"
-      - title: "OpenAI API Details"
-        url: "https://platform.openai.com/usage"
-        icon: "fas fa-brain"
-      - title: "Github"
-        url: "https://github.com/"
-        icon: "fab fa-github"
-      - title: "ChatGPT"
-        url: "https://chatgpt.com/"
-        icon: "fas fa-robot"
-      - title: "Text Gen Webui"
-        url: "http://192.168.1.239:7860"
-        icon: "fas fa-terminal"
-
-  - name: "Finance & Markets"
-    icon: "fas fa-chart-bar"
-    widgets:
-      - type: "iframe"
-        options:
-          url: "http://192.168.1.239:3353/Dashboard"
-          height: 500
-        title: "Finance Dashboard"
-      - type: "market-ticker"
-        options:
-          symbols:
-            - symbol: "SPY"
-              name: "S&P 500"
-            - symbol: "BTC-USD"
-              name: "Bitcoin"
-            - symbol: "NVDA"
-              name: "Nvidia"
-            - symbol: "AAPL"
-              name: "Apple"
-            - symbol: "MSFT"
-              name: "Microsoft"
-        title: "Market Overview"
-
-  - name: "Tech News"
-    icon: "fas fa-newspaper"
-    widgets:
-      - type: rss-feed
-        options:
-          feeds:
-            - url: "https://feeds.arstechnica.com/arstechnica/index/"
-              title: "Ars Technica"
-            - url: "https://hnrss.org/frontpage"
-              title: "Hacker News"
-            - url: "https://lobste.rs/rss"
-              title: "Lobsters"
-            - url: "https://ciechanow.ski/atom.xml"
-              title: "Bartosz Ciechanowski"
-            - url: "https://www.joshwcomeau.com/rss.xml"
-              title: "Josh Comeau"
-            - url: "https://samwho.dev/rss.xml"
-              title: "SamWho"
-            - url: "https://ishadeed.com/feed.xml"
-              title: "Ahmad Shadeed"
-          maxItems: 8
-        title: "RSS News"
+      - title: Arch Linux Launchpad
+        url: http://192.168.1.227:9090
+        icon: fas fa-rocket
+      - title: Arch Desk Launchpad
+        url: http://192.168.1.239:9090
+        icon: fas fa-desktop
+      - title: Raspberry4 Launchpad
+        url: http://192.168.1.85:9090
+        icon: fas fa-microchip
+      - title: pyNance Dashroad
+        url: http://192.168.1.239:3353
+        icon: fas fa-chart-line
+      - title: CapitalOne
+        url: https://capitalone.com
+        icon: fas fa-university
+      - title: Fidelity
+        url: https://fidelity.com/
+        icon: fas fa-dollar-sign
+      - title: OpenAI API Details
+        url: https://platform.openai.com/usage
+        icon: fas fa-brain
+      - title: Github
+        url: https://github.com/
+        icon: fab fa-github
+      - title: ChatGPT
+        url: https://chatgpt.com/
+        icon: fas fa-robot
+      - title: Text Gen Webui
+        url: http://192.168.1.239:7860
+        icon: fas fa-terminal
+pageInfo: {}

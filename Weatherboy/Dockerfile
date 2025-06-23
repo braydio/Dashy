@@ -9,6 +9,6 @@ COPY ./weather_data .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5177
+EXPOSE 5170
 CMD ["python", "weatherboy.py"]
 
