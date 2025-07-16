@@ -19,17 +19,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  weatherboy:
-    build:
-      context: ./Weatherboy
-    container_name: weatherboy
-    volumes:
-      - ./Weatherboy/templates/:/app/templates/
-      - ./Weatherboy/weather_data/:/app/weather_data/
-    env_file:
-      - ./Weatherboy/.env
-    ports:
-      - 5177:5177
-    restart: unless-stopped
-
