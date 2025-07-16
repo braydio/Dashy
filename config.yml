@@ -1,48 +1,54 @@
 appConfig:
-  title: Startpage
-  description: Starter Dash - Lobotomized from Glance Dash
-  theme: default
-  icon: fas fa-home
+  theme: colorful
+  layout: auto
+  iconSize: medium
+  statusCheck: true
+  showSplashScreen: false
+  title: Dashy Dashboard
+  header: Dashboard Landing
+  footerText: goodDashroad
+
 sections:
-  - name: Weatherboy Forecast
+  - name: Weather
     icon: fas fa-cloud-sun
     widgets:
-      - type: iframe
+      - type: weather
         options:
-          url: http://192.168.1.238:5170/
-          height: 300
-          showTitle: true
+          apiKey: 8f27148920dd4b18d2d62c2bf83fc0df
+          city: Chapel Hill
+          units: imperial
   - name: Service Status
     icon: fas fa-server
     items:
       - title: Jellyfin
-        url: http://192.168.1.238:8096
-        statusCheck: true
+        url: http://192.168.1.198:8096
         icon: si-jellyfin
       - title: Threadfin
-        url: http://192.168.1.238:34400/web
+        url: http://192.168.1.198:34400/web
         icon: fa-stream
-        statusCheck: true
       - title: JellyFindarr
         url: http://192.168.1.78:5505
-        statusCheck: true
         icon: mdi-antenna
       - title: qBittorrent
-        url: http://192.168.1.85:8050
-        statusCheck: true
+        url: http://192.168.1.198:8050
         icon: si-qbittorrent
       - title: Radarr
-        url: http://192.168.1.85:7878
-        statusCheck: true
+        url: http://192.168.1.198:7878
         icon: si-radarr
       - title: Sonarr
-        url: http://192.168.1.85:8989
-        statusCheck: true
-        icon: si-radarr
+        url: http://192.168.1.198:8989
+        icon: si-sonarr
       - title: Lidarr
-        url: http://192.168.1.85:8686
-        statusCheck: true
+        url: http://192.168.1.198:8686
         icon: si-lidarr
+      - title: Home Assistant
+        url: http://192.168.1.198:8123
+        icon: fas fa-home
+
+  - name: Home Sensors
+    icon: fas fa-bolt
+    items:
+
   - name: Bookmarks
     icon: fas fa-bookmark
     items:
@@ -52,28 +58,38 @@ sections:
       - title: Arch Desk Launchpad
         url: http://192.168.1.239:9090
         icon: fas fa-desktop
-      - title: Raspberry4 Launchpad
-        url: http://192.168.1.85:9090
-        icon: fas fa-microchip
       - title: pyNance Dashroad
         url: http://192.168.1.239:3353
         icon: fas fa-chart-line
+      - title: Text Gen WebUI
+        url: http://192.168.1.239:7860
+        icon: fas fa-terminal
       - title: CapitalOne
         url: https://capitalone.com
         icon: fas fa-university
       - title: Fidelity
-        url: https://fidelity.com/
+        url: https://fidelity.com
         icon: fas fa-dollar-sign
-      - title: OpenAI API Details
+      - title: OpenAI API
         url: https://platform.openai.com/usage
         icon: fas fa-brain
-      - title: Github
-        url: https://github.com/
+      - title: GitHub
+        url: https://github.com
         icon: fab fa-github
       - title: ChatGPT
-        url: https://chatgpt.com/
+        url: https://chatgpt.com
         icon: fas fa-robot
-      - title: Text Gen Webui
-        url: http://192.168.1.239:7860
-        icon: fas fa-terminal
-pageInfo: {}
+
+  - name: System Tools
+    icon: fas fa-cogs
+    items:
+      - title: DietPi Dashboard
+        url: http://192.168.1.198:5252
+        icon: fas fa-chart-pie
+      - title: Netdata
+        url: http://192.168.1.198:19999
+        icon: si-netdata
+      - title: Portainer
+        url: http://192.168.1.198:9000
+        icon: si-portainer
+
