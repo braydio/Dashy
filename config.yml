@@ -14,7 +14,7 @@ sections:
     widgets:
       - type: weather
         options:
-          apiKey: 8f27148920dd4b18d2d62c2bf83fc0df
+          apiKey: ${WEATHER_API_KEY}
           city: Chapel Hill
           units: imperial
   - name: Service Status
