@@ -90,3 +90,14 @@ sections:
         url: http://192.168.1.198:9000
         icon: si-portainer
 
+  - name: Email Monitor
+    icon: fas fa-envelope-open-text
+    widgets:
+      - type: custom-list
+        # Served by email_monitor/mbsync_status_server.py
+        options:
+          title: Mailboxes
+          url: ${MAIL_STATUS_ENDPOINT}
+          updateInterval: 180
+          daysForNew: 2
+
