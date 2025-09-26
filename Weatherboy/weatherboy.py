@@ -1,7 +1,17 @@
-import os, json, requests
+"""Flask application utilities for the Weatherboy dashboard.
+
+This module handles fetching, caching, and presenting weather data from
+OpenWeatherMap so that the dashboard can render forecasts quickly without
+relying on live API calls for every request.
+"""
+
+import json
+import os
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request
+
+import requests
 from dotenv import load_dotenv
+from flask import Flask, render_template, request
 
 load_dotenv()
 
@@ -9,6 +19,25 @@ API_KEY = os.getenv("API_KEY") or "YOUR_OPENWEATHERMAP_API_KEY"
 LAT, LON = 35.7796, -78.6382
 DATA_DIR = "./weather_data"
 os.makedirs(DATA_DIR, exist_ok=True)
+
+
+def _iso_from_timestamp(timestamp):
+    """Convert a Unix timestamp to an ISO 8601 string.
+
+    Args:
+        timestamp (int | float | None): The timestamp to convert.
+
+    Returns:
+        str | None: The ISO formatted timestamp if the input is valid, otherwise
+        ``None``.
+    """
+
+    if timestamp is None:
+        return None
+    try:
+        return datetime.fromtimestamp(timestamp).isoformat()
+    except (OSError, OverflowError, TypeError, ValueError):
+        return None
 
 
 def get_icon(desc):
@@ -81,21 +110,71 @@ def fetch_and_save_forecast():
 
 
 def fetch_and_cache_current_weather():
-    url = f"https://api.openweathermap.org/data/2.5/weather?lat={LAT}&lon={LON}&units=imperial&appid={API_KEY}"
-    r = requests.get(url, timeout=10).json()
-    sunrise = datetime.fromtimestamp(r["sys"]["sunrise"]).isoformat()
-    sunset = datetime.fromtimestamp(r["sys"]["sunset"]).isoformat()
-    now_data = {
-        "sunrise": sunrise,
-        "sunset": sunset,
-        "retrieved_at": datetime.now().isoformat(),
-    }
+    """Fetch current sunrise and sunset data and cache it locally.
+
+    The OpenWeatherMap API occasionally returns error payloads (for example,
+    when the configured API key is invalid) that do not include the ``sys``
+    field. This helper now guards against such scenarios by reusing previously
+    cached data when available and by falling back to reasonable defaults when
+    necessary.
+
+    Returns:
+        dict: The payload persisted to the cache for the current day.
+    """
+
+    url = (
+        "https://api.openweathermap.org/data/2.5/weather?"
+        f"lat={LAT}&lon={LON}&units=imperial&appid={API_KEY}"
+    )
+    payload = {}
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+    except (requests.RequestException, ValueError):
+        payload = {}
+
+    sys_info = payload.get("sys") or {}
+    sunrise_iso = _iso_from_timestamp(sys_info.get("sunrise"))
+    sunset_iso = _iso_from_timestamp(sys_info.get("sunset"))
+
     today = datetime.now().date().isoformat()
-    with open(cache_path(today, kind="now"), "w") as f:
-        json.dump(now_data, f)
+    cache_file = cache_path(today, kind="now")
+
+    cached_payload = {}
+    if os.path.exists(cache_file):
+        with open(cache_file) as existing_cache:
+            try:
+                cached_payload = json.load(existing_cache)
+            except json.JSONDecodeError:
+                cached_payload = {}
+
+    sunrise_iso = sunrise_iso or cached_payload.get("sunrise")
+    sunset_iso = sunset_iso or cached_payload.get("sunset")
+
+    if not sunrise_iso or not sunset_iso:
+        now = datetime.now()
+        default_sunrise = now.replace(hour=6, minute=0, second=0, microsecond=0)
+        default_sunset = now.replace(hour=18, minute=0, second=0, microsecond=0)
+        sunrise_iso = sunrise_iso or default_sunrise.isoformat()
+        sunset_iso = sunset_iso or default_sunset.isoformat()
+
+    now_data = {
+        "sunrise": sunrise_iso,
+        "sunset": sunset_iso,
+        "retrieved_at": datetime.now().isoformat(),
+        "source": payload.get("name") or "openweathermap",
+    }
+
+    with open(cache_file, "w") as cache_handle:
+        json.dump(now_data, cache_handle)
+
+    return now_data
 
 
 def load_forecast(days=5):
+    """Return a list of forecast dictionaries for the requested number of days."""
+
     today = datetime.now().date().isoformat()
     today_forecast_path = cache_path(today)
     today_now_path = cache_path(today, kind="now")
@@ -107,8 +186,22 @@ def load_forecast(days=5):
 
     with open(today_now_path) as f:
         sun = json.load(f)
-    sunrise_dt = datetime.fromisoformat(sun["sunrise"])
-    sunset_dt = datetime.fromisoformat(sun["sunset"])
+
+    sunrise_raw = sun.get("sunrise")
+    sunset_raw = sun.get("sunset")
+
+    sunrise_dt = None
+    sunset_dt = None
+    if sunrise_raw:
+        try:
+            sunrise_dt = datetime.fromisoformat(sunrise_raw)
+        except ValueError:
+            sunrise_dt = None
+    if sunset_raw:
+        try:
+            sunset_dt = datetime.fromisoformat(sunset_raw)
+        except ValueError:
+            sunset_dt = None
 
     forecast = []
     for offset in range(days):
@@ -119,12 +212,13 @@ def load_forecast(days=5):
                 data = json.load(f)
 
             if offset == 0:
-                data["sunrise"] = sun["sunrise"]
-                data["sunset"] = sun["sunset"]
-                data["daylight_bounds"] = {
-                    "sunrise_hour": sunrise_dt.hour,
-                    "sunset_hour": sunset_dt.hour,
-                }
+                data["sunrise"] = sunrise_raw
+                data["sunset"] = sunset_raw
+                if sunrise_dt and sunset_dt:
+                    data["daylight_bounds"] = {
+                        "sunrise_hour": sunrise_dt.hour,
+                        "sunset_hour": sunset_dt.hour,
+                    }
 
             forecast.append(
                 {
