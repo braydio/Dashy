@@ -23,24 +23,111 @@ sections:
       - title: Jellyfin
         url: http://192.168.1.198:8097
         icon: si-jellyfin
+        statusCheck: true
+        statusCheckAllowInsecure: true
       - title: Threadfin
         url: http://192.168.1.198:34400/web
         icon: fa-stream
+        statusCheck: true
+        statusCheckUrl: http://192.168.1.198:34400
+        statusCheckAllowInsecure: true
       - title: JellyFindarr
         url: http://192.168.1.78:5505
         icon: mdi-antenna
+        statusCheck: true
+        statusCheckAllowInsecure: true
       - title: qBittorrent
         url: http://192.168.1.198:8080
         icon: si-qbittorrent
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        statusCheckAcceptCodes: '200,401'
       - title: Radarr
         url: http://192.168.1.198:7878
         icon: si-radarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
       - title: Sonarr
         url: http://192.168.1.198:8989
         icon: si-sonarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Windscribe VPN
+        icon: si-windscribe
+        url: https://windscribe.com
+        statusCheck: true
+        statusCheckUrl: ${STATUS_API_BASE}/systemd/windscribe
+        statusCheckHeaders:
+          X-Status-Token: ${STATUS_API_TOKEN}
+        statusCheckAllowInsecure: true
+      - title: Syncthing
+        url: http://192.168.1.198:8384
+        icon: si-syncthing
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Spotifyd
+        icon: si-spotify
+        statusCheck: true
+        statusCheckUrl: ${STATUS_API_BASE}/systemd/spotifyd
+        statusCheckHeaders:
+          X-Status-Token: ${STATUS_API_TOKEN}
+        statusCheckAllowInsecure: true
+      - title: Lidarr
+        url: http://192.168.1.198:8686
+        icon: si-lidarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Readarr
+        url: http://192.168.1.198:8787
+        icon: si-readarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Bazarr
+        url: http://192.168.1.198:6767
+        icon: si-bazarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Prowlarr
+        url: http://192.168.1.198:9696
+        icon: si-prowlarr
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Gitea
+        url: http://192.168.1.198:3000
+        icon: si-gitea
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Filebrowser
+        url: http://192.168.1.198:8081
+        icon: si-filebrowser
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: DietPi CloudShell
+        url: http://192.168.1.198:5252/#/cloudshell
+        icon: si-dietpi
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Demuxer
+        url: http://192.168.1.198:9999
+        icon: fas fa-random
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Unmanic
+        url: http://192.168.1.198:8888
+        icon: fas fa-sync-alt
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Portainer
+        url: http://192.168.1.198:9000
+        icon: si-portainer
+        statusCheck: true
+        statusCheckAllowInsecure: true
       - title: Home Assistant
         url: http://192.168.1.198:8123
         icon: fas fa-home
+        statusCheck: true
+        statusCheckUrl: http://192.168.1.198:8123/manifest.json
+        statusCheckAllowInsecure: true
 
   - name: Home Sensors
     icon: fas fa-bolt
