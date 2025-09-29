@@ -83,12 +83,30 @@ sections:
       - title: DietPi Dashboard
         url: http://192.168.1.198:5252
         icon: fas fa-chart-pie
+      - title: DietPi CloudShell
+        url: http://192.168.1.198:5254
+        icon: fas fa-terminal
       - title: Netdata
         url: http://192.168.1.198:19999
         icon: si-netdata
+      - title: Gitea
+        url: http://192.168.1.198:3000
+        icon: si-gitea
+      - title: Filebrowser
+        url: http://192.168.1.198:8081
+        icon: si-filebrowser
       - title: Portainer
         url: http://192.168.1.198:9000
         icon: si-portainer
+      - title: Syncthing
+        url: http://192.168.1.198:8384
+        icon: si-syncthing
+      - title: Demuxer
+        url: http://192.168.1.198:9998
+        icon: fas fa-film
+      - title: Unmanic
+        url: http://192.168.1.198:8888
+        icon: si-unmanic
 
   - name: Email Monitor
     icon: fas fa-envelope-open-text
