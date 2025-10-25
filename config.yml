@@ -8,6 +8,7 @@ appConfig:
   header: Dashboard Landing
   footerText: goodDashroad
 
+# Main landing page: keep it lean with your essentials
 sections:
   - name: Weather
     icon: fas fa-cloud-sun
@@ -17,24 +18,20 @@ sections:
           apiKey: ${WEATHER_API_KEY}
           city: Chapel Hill
           units: imperial
-  - name: Service Status
-    icon: fas fa-server
+  - name: Quick Links
+    icon: fas fa-bolt
     items:
-      - title: Jellyfin
-        url: http://192.168.1.198:8097
-        icon: si-jellyfin
+      - title: ChatGPT
+        url: https://chatgpt.com
+        icon: fas fa-robot
+      - title: GitHub
+        url: https://github.com
+        icon: fab fa-github
+      - title: Home Assistant
+        url: http://192.168.1.198:8123
+        icon: fas fa-home
         statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Threadfin
-        url: http://192.168.1.198:34400/web
-        icon: fa-stream
-        statusCheck: true
-        statusCheckUrl: http://192.168.1.198:34400
-        statusCheckAllowInsecure: true
-      - title: JellyFindarr
-        url: http://192.168.1.78:5505
-        icon: mdi-antenna
-        statusCheck: true
+        statusCheckUrl: http://192.168.1.198:8123/manifest.json
         statusCheckAllowInsecure: true
       - title: qBittorrent
         url: http://192.168.1.198:8080
@@ -42,167 +39,161 @@ sections:
         statusCheck: true
         statusCheckAllowInsecure: true
         statusCheckAcceptCodes: '200,401'
-      - title: Radarr
-        url: http://192.168.1.198:7878
-        icon: si-radarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Sonarr
-        url: http://192.168.1.198:8989
-        icon: si-sonarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Windscribe VPN
-        icon: si-windscribe
-        url: https://windscribe.com
-        statusCheck: true
-        statusCheckUrl: ${STATUS_API_BASE}/systemd/windscribe
-        statusCheckHeaders:
-          X-Status-Token: ${STATUS_API_TOKEN}
-        statusCheckAllowInsecure: true
-      - title: Syncthing
-        url: http://192.168.1.198:8384
-        icon: si-syncthing
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Spotifyd
-        icon: si-spotify
-        statusCheck: true
-        statusCheckUrl: ${STATUS_API_BASE}/systemd/spotifyd
-        statusCheckHeaders:
-          X-Status-Token: ${STATUS_API_TOKEN}
-        statusCheckAllowInsecure: true
-      - title: Lidarr
-        url: http://192.168.1.198:8686
-        icon: si-lidarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Readarr
-        url: http://192.168.1.198:8787
-        icon: si-readarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Bazarr
-        url: http://192.168.1.198:6767
-        icon: si-bazarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Prowlarr
-        url: http://192.168.1.198:9696
-        icon: si-prowlarr
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Gitea
-        url: http://192.168.1.198:3000
-        icon: si-gitea
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Filebrowser
-        url: http://192.168.1.198:8081
-        icon: si-filebrowser
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: DietPi CloudShell
-        url: http://192.168.1.198:5252/#/cloudshell
-        icon: si-dietpi
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Demuxer
-        url: http://192.168.1.198:9999
-        icon: fas fa-random
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Unmanic
-        url: http://192.168.1.198:8888
-        icon: fas fa-sync-alt
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Portainer
-        url: http://192.168.1.198:9000
-        icon: si-portainer
-        statusCheck: true
-        statusCheckAllowInsecure: true
-      - title: Home Assistant
-        url: http://192.168.1.198:8123
-        icon: fas fa-home
-        statusCheck: true
-        statusCheckUrl: http://192.168.1.198:8123/manifest.json
-        statusCheckAllowInsecure: true
 
-  - name: Home Sensors
-    icon: fas fa-bolt
-    items:
+# Additional content organized into dedicated pages
+pages:
+  - name: Media
+    path: /media
+    sections:
+      - name: Media Services
+        icon: fas fa-film
+        items:
+          - title: Jellyfin
+            url: http://192.168.1.198:8097
+            icon: si-jellyfin
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Threadfin
+            url: http://192.168.1.198:34400/web
+            icon: fa-stream
+            statusCheck: true
+            statusCheckUrl: http://192.168.1.198:34400
+            statusCheckAllowInsecure: true
+          - title: JellyFindarr
+            url: http://192.168.1.78:5505
+            icon: mdi-antenna
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Radarr
+            url: http://192.168.1.198:7878
+            icon: si-radarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Sonarr
+            url: http://192.168.1.198:8989
+            icon: si-sonarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Lidarr
+            url: http://192.168.1.198:8686
+            icon: si-lidarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Readarr
+            url: http://192.168.1.198:8787
+            icon: si-readarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Bazarr
+            url: http://192.168.1.198:6767
+            icon: si-bazarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Prowlarr
+            url: http://192.168.1.198:9696
+            icon: si-prowlarr
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Unmanic
+            url: http://192.168.1.198:8888
+            icon: fas fa-sync-alt
+            statusCheck: true
+            statusCheckAllowInsecure: true
+          - title: Demuxer
+            url: http://192.168.1.198:9999
+            icon: fas fa-random
+            statusCheck: true
+            statusCheckAllowInsecure: true
+
+  - name: System
+    path: /system
+    sections:
+      - name: System Tools
+        icon: fas fa-cogs
+        items:
+          - title: DietPi Dashboard
+            url: http://192.168.1.198:5252
+            icon: fas fa-chart-pie
+          - title: DietPi CloudShell
+            url: http://192.168.1.198:5254
+            icon: fas fa-terminal
+          - title: Netdata
+            url: http://192.168.1.198:19999
+            icon: si-netdata
+          - title: Portainer
+            url: http://192.168.1.198:9000
+            icon: si-portainer
+          - title: Filebrowser
+            url: http://192.168.1.198:8081
+            icon: si-filebrowser
+          - title: Syncthing
+            url: http://192.168.1.198:8384
+            icon: si-syncthing
+          - title: Windscribe VPN
+            icon: si-windscribe
+            url: https://windscribe.com
+            statusCheck: true
+            statusCheckUrl: ${STATUS_API_BASE}/systemd/windscribe
+            statusCheckHeaders:
+              X-Status-Token: ${STATUS_API_TOKEN}
+            statusCheckAllowInsecure: true
+          - title: Spotifyd
+            icon: si-spotify
+            statusCheck: true
+            statusCheckUrl: ${STATUS_API_BASE}/systemd/spotifyd
+            statusCheckHeaders:
+              X-Status-Token: ${STATUS_API_TOKEN}
+            statusCheckAllowInsecure: true
+
+  - name: Dev
+    path: /dev
+    sections:
+      - name: Developer Tools
+        icon: fas fa-code
+        items:
+          - title: Gitea
+            url: http://192.168.1.198:3000
+            icon: si-gitea
+          - title: Text Gen WebUI
+            url: http://192.168.1.68:7860
+            icon: fas fa-terminal
+          - title: pyNance Dashroad
+            url: http://192.168.1.237:3353
+            icon: fas fa-chart-line
+          - title: OpenAI API Details
+            url: https://platform.openai.com/usage
+            icon: fas fa-brain
 
   - name: Bookmarks
-    icon: fas fa-bookmark
-    items:
-      - title: Arch Linux Launchpad
-        url: http://192.168.1.228:9090
-        icon: fas fa-rocket
-      - title: Arch Desk Launchpad
-        url: http://192.168.1.237:9090
-        icon: fas fa-desktop
-      - title: pyNance Dashroad
-        url: http://192.168.1.237:3353
-        icon: fas fa-chart-line
-      - title: Text Gen WebUI
-        url: http://192.168.1.68:7860
-        icon: fas fa-terminal
-      - title: CapitalOne
-        url: https://capitalone.com
-        icon: fas fa-university
-      - title: Fidelity
-        url: https://fidelity.com
-        icon: fas fa-dollar-sign
-      - title: OpenAI API Details
-        url: https://platform.openai.com/usage
-        icon: fas fa-brain
-      - title: GitHub
-        url: https://github.com
-        icon: fab fa-github
-      - title: ChatGPT
-        url: https://chatgpt.com
-        icon: fas fa-robot
+    path: /bookmarks
+    sections:
+      - name: Launchpads & Finance
+        icon: fas fa-bookmark
+        items:
+          - title: Arch Linux Launchpad
+            url: http://192.168.1.228:9090
+            icon: fas fa-rocket
+          - title: Arch Desk Launchpad
+            url: http://192.168.1.237:9090
+            icon: fas fa-desktop
+          - title: CapitalOne
+            url: https://capitalone.com
+            icon: fas fa-university
+          - title: Fidelity
+            url: https://fidelity.com
+            icon: fas fa-dollar-sign
 
-  - name: System Tools
-    icon: fas fa-cogs
-    items:
-      - title: DietPi Dashboard
-        url: http://192.168.1.198:5252
-        icon: fas fa-chart-pie
-      - title: DietPi CloudShell
-        url: http://192.168.1.198:5254
-        icon: fas fa-terminal
-      - title: Netdata
-        url: http://192.168.1.198:19999
-        icon: si-netdata
-      - title: Gitea
-        url: http://192.168.1.198:3000
-        icon: si-gitea
-      - title: Filebrowser
-        url: http://192.168.1.198:8081
-        icon: si-filebrowser
-      - title: Portainer
-        url: http://192.168.1.198:9000
-        icon: si-portainer
-      - title: Syncthing
-        url: http://192.168.1.198:8384
-        icon: si-syncthing
-      - title: Demuxer
-        url: http://192.168.1.198:9998
-        icon: fas fa-film
-      - title: Unmanic
-        url: http://192.168.1.198:8888
-        icon: si-unmanic
-
-  - name: Email Monitor
-    icon: fas fa-envelope-open-text
-    widgets:
-      - type: custom-list
-        # Served by email_monitor/mbsync_status_server.py
-        options:
-          title: Mailboxes
-          url: ${MAIL_STATUS_ENDPOINT}
-          updateInterval: 180
-          daysForNew: 2
+  - name: Email
+    path: /email
+    sections:
+      - name: Email Monitor
+        icon: fas fa-envelope-open-text
+        widgets:
+          - type: custom-list
+            # Served by email_monitor/mbsync_status_server.py
+            options:
+              title: Mailboxes
+              url: ${MAIL_STATUS_ENDPOINT}
+              updateInterval: 180
+              daysForNew: 2
 

@@ -1,0 +1,19 @@
+services:
+  email-monitor:
+    container_name: EmailMonitor
+    build: .
+    environment:
+      # Bind to all interfaces so other hosts/containers can reach it
+      - MAIL_STATUS_HOST=0.0.0.0
+      - MAIL_STATUS_PORT=8765
+      # Set your Maildir path inside the container
+      - MAILDIR=/mail
+      # Optional: set to empty to skip syncing and only count unread mail
+      - MBSYNC_COMMAND=mbsync -a
+    volumes:
+      # Mount your host Maildir here; adjust the left side to your path
+      - /home/you/.mail:/mail
+    ports:
+      - "8765:8765"
+    restart: unless-stopped
+

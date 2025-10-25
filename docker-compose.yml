@@ -21,3 +21,19 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  email-monitor:
+    container_name: EmailMonitor
+    build: ./email_monitor
+    environment:
+      - MAIL_STATUS_HOST=0.0.0.0
+      - MAIL_STATUS_PORT=8765
+      - MAILDIR=/mail
+      # Set empty by default to avoid failures when .mbsyncrc is not available
+      - MBSYNC_COMMAND=
+    volumes:
+      # Point this to your host Maildir path; default is a placeholder
+      - ${MAILDIR_HOST_PATH:-/home/you/.mail}:/mail
+    ports:
+      - "8765:8765"
+    restart: unless-stopped
