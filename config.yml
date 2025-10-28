@@ -38,7 +38,7 @@ sections:
         icon: si-qbittorrent
         statusCheck: true
         statusCheckAllowInsecure: true
-        statusCheckAcceptCodes: '200,401'
+        statusCheckAcceptCodes: [200, 401]
 
 # Additional content organized into dedicated pages
 pages:
@@ -196,4 +196,3 @@ pages:
               url: ${MAIL_STATUS_ENDPOINT}
               updateInterval: 180
               daysForNew: 2
-

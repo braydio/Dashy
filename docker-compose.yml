@@ -4,8 +4,11 @@ services:
     container_name: Dashy
     image: lissy93/dashy
     volumes:
+      # Mount config and icons to both current and legacy paths for compatibility
       - ./config.yml:/app/user-data/conf.yml
+      - ./config.yml:/app/public/conf.yml
       - ./item-icons/:/app/user-data/item-icons/
+      - ./item-icons/:/app/public/item-icons/
     env_file:
       - ./.env
     ports:
