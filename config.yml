@@ -39,6 +39,9 @@ sections:
         statusCheck: true
         statusCheckAllowInsecure: true
         statusCheckAcceptCodes: [200, 401]
+      - title: pyNance Dashroad
+        url: http://192.168.1.237:3353
+        icon: fas fa-chart-line
 
 # Additional content organized into dedicated pages
 pages:
