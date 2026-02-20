@@ -42,6 +42,16 @@ sections:
       - title: pyNance Dashroad
         url: http://192.168.1.237:3353
         icon: fas fa-chart-line
+      - title: Blockbuster Shelf
+        url: http://192.168.1.237:8100
+        icon: fas fa-compact-disc
+        statusCheck: true
+        statusCheckAllowInsecure: true
+      - title: Home Server Dashboard
+        url: http://192.168.1.19:8000
+        icon: fas fa-server
+        statusCheck: true
+        statusCheckAllowInsecure: true
 
 # Additional content organized into dedicated pages
 pages:
